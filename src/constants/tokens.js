@@ -48,6 +48,6 @@ export const yDAI = {
 
 export const aUSDC = {
   addr: '0x9ba00d6856a4edf4665bca2c2309936572473b7e',
-  decimals: 18,
+  decimals: 6,
   symbol: 'aUSDC',
 };

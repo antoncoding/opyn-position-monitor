@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import * as types from '../types';
 import { getAllOptions, getUniswapExchanges, optionTheGraph } from '../utils/graph';
 import { getUniswapExchangeAddress, getERC20Symbol, getERC20Name } from '../utils/infura';
-import { USDC, OPYN_ETH, cDAI, cUSDC, CurveFi, WETH, DAI, yDAI, aUSDC } from '../constants/tokens';
+import { USDC, OPYN_ETH, cDAI, cUSDC, CurveFi, WETH, DAI, yDAI, COMP, aUSDC } from '../constants/tokens';
 import { blackList } from '../constants/options'
 import { EMPTY_EXCHANGE } from '../constants/contracts';
 
@@ -14,7 +14,7 @@ import { getPreference, storePreference } from '../utils/storage';
 
 import Promise from 'bluebird';
 
-const tokens = [USDC, OPYN_ETH, cDAI, cUSDC, CurveFi, WETH, DAI, yDAI, aUSDC];
+const tokens = [USDC, OPYN_ETH, cDAI, cUSDC, CurveFi, WETH, DAI, yDAI, aUSDC, COMP];
 const ERC20InfoAndExchangeKey = 'ERC20InfoAndExchanges';
 
 type storedERC20Info = {
@@ -29,13 +29,15 @@ export const useOptions = () => {
   const [isInitializing, setInitializing] = useState(true)
   const [options, setOptions] = useState<types.optionWithStat[]>([])
   const [insurances, setInsurances] = useState<types.optionWithStat[]>([])
-  const [puts, setPuts] = useState<types.ethOptionWithStat[]>([])
-  const [calls, setCalls] = useState<types.ethOptionWithStat[]>([])
+  const [ethPuts, setEthPuts] = useState<types.ethOptionWithStat[]>([])
+  const [ethCalls, setEthCalls] = useState<types.ethOptionWithStat[]>([])
+  const [compPuts, setCompPuts] = useState<types.ethOptionWithStat[]>([])
 
   const InitData =  useAsyncMemo <{
     insurances: types.optionWithStat[];
-    puts: types.ethOptionWithStat[];
-    calls: types.ethOptionWithStat[];
+    ethPuts: types.ethOptionWithStat[];
+    ethCalls: types.ethOptionWithStat[];
+    compPuts: types.ethOptionWithStat[];
   } | null > (
     async() => {
       return await initOptions()
@@ -46,10 +48,11 @@ export const useOptions = () => {
     let isCancelled = false
 
     if (!isCancelled && InitData){ 
-      setOptions(InitData.insurances.concat(InitData.calls).concat(InitData.puts))
+      setOptions(InitData.insurances.concat(InitData.ethCalls).concat(InitData.ethPuts).concat(InitData.compPuts))
       setInsurances(InitData.insurances)
-      setCalls(InitData.calls)
-      setPuts(InitData.puts)
+      setEthCalls(InitData.ethCalls)
+      setEthPuts(InitData.ethPuts)
+      setCompPuts(InitData.compPuts)
       setInitializing(false)
     }
 
@@ -58,7 +61,7 @@ export const useOptions = () => {
     }
   }, [InitData])
 
-  return {options, insurances, puts, calls, isInitializing}
+  return {options, insurances, ethPuts, ethCalls, compPuts, isInitializing}
 }
 
 /**
@@ -66,8 +69,9 @@ export const useOptions = () => {
  */
 const initOptions = async (): Promise<{
   insurances: types.optionWithStat[];
-  puts: types.optionWithStat[];
-  calls: types.optionWithStat[];
+  ethPuts: types.optionWithStat[];
+  ethCalls: types.optionWithStat[];
+  compPuts: types.optionWithStat[];
 }> => {
   const storedErc20InfoAndExchanges: storedERC20Info[] = JSON.parse(
     getPreference(ERC20InfoAndExchangeKey, '[]')
@@ -102,6 +106,9 @@ const initOptions = async (): Promise<{
     // Check Local storage or query Infura instead.
     if (_exchange === undefined) {
       const storedInfo = storedErc20InfoAndExchanges.find((entry) => entry.address === option.addr);
+      if (option.addr === '0xbaf6cfa199fbbe8a9e5198f2af20040c5e7b0333' && storedInfo) {
+        storedInfo.name = 'Opyn ETH Call 1/250th share 06/26/20'
+      }
       if (storedInfo !== undefined) {
         _exchange = {
           id: storedInfo.uniswapExchange,
@@ -165,12 +172,14 @@ const categorizeOptions = (
   options: types.optionWithStat[]
 ): {
   insurances: types.optionWithStat[];
-  puts: types.ethOptionWithStat[];
-  calls: types.ethOptionWithStat[];
+  ethPuts: types.ethOptionWithStat[];
+  ethCalls: types.ethOptionWithStat[];
+  compPuts: types.ethOptionWithStat[];
 } => {
   const insurances: types.optionWithStat[] = [];
-  const puts: types.ethOptionWithStat[] = [];
-  const calls: types.ethOptionWithStat[] = [];
+  const ethPuts: types.ethOptionWithStat[] = [];
+  const ethCalls: types.ethOptionWithStat[] = [];
+  const compPuts: types.ethOptionWithStat[] = [];
 
   options.forEach((option) => {
     if (option.name === '') return;
@@ -181,7 +190,7 @@ const categorizeOptions = (
         type: 'put' as 'put',
         strikePriceInUSD,
       };
-      puts.push(put);
+      ethPuts.push(put);
     } else if (
       option.collateral === OPYN_ETH &&
       option.strike === OPYN_ETH &&
@@ -193,13 +202,21 @@ const categorizeOptions = (
         type: 'call' as 'call',
         strikePriceInUSD,
       };
-      calls.push(call);
+      ethCalls.push(call);
+    }  else if (option.collateral === USDC && option.strike === USDC && option.underlying === COMP) {
+      const strikePriceInUSD = parseStrikePriceUSDCFromName(option, 'put')
+      const put = {
+        ...option,
+        type: 'put' as 'put',
+        strikePriceInUSD,
+      };
+      compPuts.push(put);
     } else {
       insurances.push(option);
     }
   });
 
-  return { insurances, puts, calls };
+  return { insurances, ethPuts, ethCalls, compPuts };
 };
 
 const parseStrikePriceUSDCFromName = (option: types.optionWithStat, type: 'call'|'put') => {

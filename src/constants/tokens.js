@@ -51,3 +51,9 @@ export const aUSDC = {
   decimals: 6,
   symbol: 'aUSDC',
 };
+
+export const COMP = {
+  addr: '0xc00e94cb662c3520282e6f5717214004a7f26888',
+  decimals: 18,
+  symbol: 'COMP',
+};

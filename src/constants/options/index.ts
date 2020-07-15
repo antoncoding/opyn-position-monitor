@@ -14,6 +14,7 @@ export const blackList = [
   "0x9960c89e8b4a50d7d8e8694ccf5c2f78fbfc931b",
   "0x0840fa4a72c5bd400f7f6d0a1496e37f935d0675",
   //
+  "0x632882f82c7023f17133fe894263b8b10f6ef2b4" // testing comp
 ]
 
 export const defaultOption: optionWithStat = {

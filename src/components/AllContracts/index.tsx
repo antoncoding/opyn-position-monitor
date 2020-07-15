@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  Header, DataView, IdentityBadge, Button, Tabs, Timer
+  Header, DataView, IdentityBadge, Button, Tabs, Timer, Tag
 } from '@aragon/ui';
 
 import { Comment, CheckBox } from '../common';
@@ -19,8 +19,10 @@ function AllContracts() {
 
   const { isInitializing,
     insurances,
-    calls,
-    puts, } = useOptions()
+    ethCalls,
+    ethPuts,
+    compPuts
+  } = useOptions()
 
   const storedOptionTab = getPreference('optionTab', '0');
   const storedShowExpired = getPreference('showExpired', '0');
@@ -51,7 +53,7 @@ function AllContracts() {
         </div>
       </div>
       <Tabs
-        items={['DeFi Insurance', 'Put Options', 'Call Options']}
+        items={['DeFi Insurance', 'ETH Options', <> Other Options <Tag> NEW </Tag> </>]}
         selected={tabSelected}
         onChange={(choice: number) => {
           setTabSelected(choice);
@@ -81,15 +83,17 @@ function AllContracts() {
         />}
       {tabSelected === 1 &&
         <OptionList
-          typeText="Put Options"
-          entries={puts}
+        isInitializing={isInitializing}
+          typeText="ETH Options"
+          entries={ethCalls.concat(ethPuts)}
           showExpired={showExpired}
           goToToken={goToToken}
         />}
       {tabSelected === 2 &&
         <OptionList
-          typeText="Call Options"
-          entries={calls}
+          isInitializing={isInitializing}
+          typeText="Other Options"
+          entries={compPuts}
           showExpired={showExpired}
           goToToken={goToToken}
         />
@@ -101,15 +105,20 @@ function AllContracts() {
 
 export default AllContracts;
 
-function OptionList({ entries, showExpired, goToToken, typeText }: { typeText: string, entries: types.ETHOption[], showExpired: boolean, goToToken: Function }) {
+function OptionList({ isInitializing, entries, showExpired, goToToken, typeText }: { isInitializing:Boolean, typeText: string, entries: types.ETHOption[], showExpired: boolean, goToToken: Function }) {
   const [page, setPage] = useState(0)
   return (
     <DataView
+      status={isInitializing?'loading':'default'}
       statusEmpty={<div>No {typeText} Available</div>}
       fields={['Contract', 'Strike Price', 'Expiration', 'Expires in', '']}
       entries={entries
         .filter((option) => showExpired || option.expiry * 1000 > Date.now())
-        .sort((oa, ob) => oa.expiry > ob.expiry ? -1 : 1)
+        .sort((oa, ob) =>  oa.type === ob.type 
+          ? oa.expiry > ob.expiry 
+            ? -1 : 1 
+          : oa.type === 'call' 
+            ? -1 : 1)
       }
       page={page}
       onPageChange={setPage}

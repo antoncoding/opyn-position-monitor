@@ -5,7 +5,6 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-import MesaLogo from '../../imgs/gnosis.png'
 import UniswapLogo from '../../imgs/uniswap.png'
 
 import {
@@ -49,8 +48,7 @@ function HomePage() {
             <MainButton
               title="Exchanges"
               description="View all open markets"
-              iconUrl={UniswapLogo}
-              secondImg={MesaLogo}
+              iconUrl="https://opyn.co/static/media/3.4da8b24d.svg"
               onClick={() => {
                 history.push('/uniswap/');
               }}

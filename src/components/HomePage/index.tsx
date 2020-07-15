@@ -42,7 +42,7 @@ function HomePage() {
               }}
             />
           </Col>
-          <Col md={6} lg={4}>
+          {/* <Col md={6} lg={4}>
             <div>
             </div>
             <MainButton
@@ -53,11 +53,10 @@ function HomePage() {
                 history.push('/uniswap/');
               }}
             />
-          </Col>
+          </Col> */}
           <Col md={6} lg={4}>
             <MainButton
               title="Trade"
-              tag="new"
               description="Trade ETH Options on Uniswap."
               iconUrl={UniswapLogo}
               onClick={() => {
@@ -68,7 +67,6 @@ function HomePage() {
           <Col md={6} lg={4}>
             <MainButton
               title="Trade"
-              tag="new"
               description="Trade ETH Options on 0x"
               iconUrl="https://cdn.worldvectorlogo.com/logos/0x-virtual-money-.svg"
               onClick={() => {

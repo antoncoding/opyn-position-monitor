@@ -53,7 +53,7 @@ function AllContracts() {
         </div>
       </div>
       <Tabs
-        items={['DeFi Insurance', 'ETH Options', <> Other Options <Tag> NEW </Tag> </>]}
+        items={['DeFi Insurance', 'ETH Options', 'Other Options']}
         selected={tabSelected}
         onChange={(choice: number) => {
           setTabSelected(choice);
@@ -73,7 +73,7 @@ function AllContracts() {
           }
           entriesPerPage={6}
           renderEntry={(option: types.option) => [
-            <IdentityBadge label={option.title} entity={option.addr} />,
+            <IdentityBadge label={<> {option.title} {option.title.includes('aUSDC') ? <Tag>New</Tag> : <></> } </>} entity={option.addr} />,
             <IdentityBadge label={option.underlying.symbol} entity={option.underlying.addr} />,
             <IdentityBadge label={option.strike.symbol} entity={option.strike.addr} />,
             <IdentityBadge label={option.collateral.symbol} entity={option.collateral.addr} />,

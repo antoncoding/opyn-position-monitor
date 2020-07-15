@@ -5,7 +5,7 @@ import {
 } from '@aragon/ui';
 import { useOptions } from '../../hooks'
 
-import { Comment, CheckBox, GoToUniswapButton } from '../common';
+import { Comment, CheckBox, GoToUniswapButton, GoToBalancerButton } from '../common';
 import { storePreference, getPreference } from '../../utils/storage';
 import { aUSDC } from '../../constants/tokens'
 
@@ -54,12 +54,13 @@ function TradeLanding() {
         onPageChange={setIPages}
         renderEntry={({ addr, title, underlying }) => {
           const isAvve = underlying === aUSDC
+          const button  = isAvve ? <GoToBalancerButton token={addr} /> : <GoToUniswapButton token={addr} />
           return [
           <>{title}</>,
           <IdentityBadge entity={addr} shorten={false} />,
           <div style={{ display: 'flex' }}>
             <Button disabled={isAvve} onClick={() => goToTrade(addr)}> Start Trading </Button>
-            <GoToUniswapButton token={addr} />
+            {button}
           </div>,
         ]}}
       />

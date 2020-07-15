@@ -7,7 +7,7 @@ import {
 
 import MesaLogo from '../../imgs/gnosis.png'
 import UniswapLogo from '../../imgs/uniswap.png'
-
+import BalancerLogo from '../../imgs/balancer.png'
 import tracker from '../../utils/tracker';
 
 export function GoToUniswapButton({ token }: { token: string }) {
@@ -62,7 +62,7 @@ export function GoToBalancerButton({ token }: { token: string }) {
     }
     }
     >
-      <img alt="mesa" src={MesaLogo} style={{ padding: 2, height: 32, width: 32 }} />
+      <img alt="balancer" src={BalancerLogo} style={{ padding: 2, height: 32, width: 32 }} />
     </Button>
   );
 }

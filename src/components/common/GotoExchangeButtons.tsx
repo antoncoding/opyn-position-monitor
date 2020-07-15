@@ -62,7 +62,7 @@ export function GoToBalancerButton({ token }: { token: string }) {
     }
     }
     >
-      <img alt="balancer" src={BalancerLogo} style={{ padding: 2, height: 32, width: 32 }} />
+      <img alt="balancer" src={BalancerLogo} style={{ padding: 2, height: 32, width: 29 }} />
     </Button>
   );
 }

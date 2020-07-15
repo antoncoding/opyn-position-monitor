@@ -7,7 +7,6 @@ import { useOptions } from '../../hooks'
 
 import { Comment, CheckBox, GoToUniswapButton, GoToBalancerButton } from '../common';
 import { storePreference, getPreference } from '../../utils/storage';
-import { aUSDC } from '../../constants/tokens'
 
 import tracker from '../../utils/tracker';
 
@@ -53,7 +52,7 @@ function TradeLanding() {
         page={insurancePage}
         onPageChange={setIPages}
         renderEntry={({ addr, title, underlying }) => {
-          const isAvve = underlying === aUSDC
+          const isAvve = underlying.protocol === 'aave'
           const button  = isAvve ? <GoToBalancerButton token={addr} /> : <GoToUniswapButton token={addr} />
           return [
           <>{title}</>,

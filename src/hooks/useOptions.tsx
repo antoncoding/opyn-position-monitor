@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import * as types from '../types';
 import { getAllOptions, getUniswapExchanges, optionTheGraph } from '../utils/graph';
 import { getUniswapExchangeAddress, getERC20Symbol, getERC20Name } from '../utils/infura';
-import { USDC, OPYN_ETH, cDAI, cUSDC, CurveFi, WETH, DAI, yDAI, COMP, aUSDC } from '../constants/tokens';
+import { knownTokens, COMP, BAL, USDC, OPYN_ETH } from '../constants/tokens';
 import { blackList } from '../constants/options'
 import { EMPTY_EXCHANGE } from '../constants/contracts';
 
@@ -14,8 +14,11 @@ import { getPreference, storePreference } from '../utils/storage';
 
 import Promise from 'bluebird';
 
-const tokens = [USDC, OPYN_ETH, cDAI, cUSDC, CurveFi, WETH, DAI, yDAI, aUSDC, COMP];
+// const tokens = [USDC, OPYN_ETH, cDAI, cUSDC, CurveFi, WETH, DAI, yDAI, aUSDC, COMP];
 const ERC20InfoAndExchangeKey = 'ERC20InfoAndExchanges';
+
+// Only accept comp or bal options to show in "Other options"
+export const isOtherOptions = (token) => token === COMP || token === BAL;
 
 type storedERC20Info = {
   address: string;
@@ -88,9 +91,9 @@ const initOptions = async (): Promise<{
 
     if (blackList.includes(option.addr)) return;
 
-    const collateralToken = tokens.find((token) => token.addr === option.collateral);
-    const strikeToken = tokens.find((token) => token.addr === option.strike);
-    const underlyingToken = tokens.find((token) => token.addr === option.underlying);
+    const collateralToken = knownTokens.find((token) => token.addr === option.collateral);
+    const strikeToken = knownTokens.find((token) => token.addr === option.strike);
+    const underlyingToken = knownTokens.find((token) => token.addr === option.underlying);
 
     if (!collateralToken || !strikeToken || !underlyingToken) {
       return;
@@ -203,7 +206,7 @@ const categorizeOptions = (
         strikePriceInUSD,
       };
       ethCalls.push(call);
-    }  else if (option.collateral === USDC && option.strike === USDC && option.underlying === COMP) {
+    }  else if (option.collateral === USDC && option.strike === USDC && isOtherOptions(option.underlying)) {
       const strikePriceInUSD = parseStrikePriceUSDCFromName(option, 'put')
       const put = {
         ...option,

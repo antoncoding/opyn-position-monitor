@@ -4,7 +4,7 @@ import {
   DataView, IdentityBadge, Button, Timer
 } from '@aragon/ui';
 
-import { GoToUniswapButton } from '../common';
+import { GoToUniswapButton, TokenIcon } from '../common';
 
 import * as types from '../../types'
 
@@ -15,7 +15,7 @@ export function OtherOptionList({ isInitializing, entries, showExpired, goToToke
     <DataView
       status={isInitializing?'loading':'default'}
       statusEmpty={<div>No Options Available</div>}
-      fields={['Contract','Underlying', 'Strike Price', 'Expiration', 'Expires in', '']}
+      fields={['Contract','Underlying', 'Strike Price', 'Expires in', '']}
       entries={entries
         .filter((option) => showExpired || option.expiry * 1000 > Date.now())
         .sort((oa, ob) =>  oa.type === ob.type 
@@ -29,8 +29,8 @@ export function OtherOptionList({ isInitializing, entries, showExpired, goToToke
       entriesPerPage={6}
       renderEntry={(option: types.ETHOption) => [
         <IdentityBadge label={option.title} entity={option.addr} shorten={false} />,
+        <TokenIcon token={option.underlying}/>,
         <>{option.strikePriceInUSD + ' USD'}</>,
-        new Date(option.expiry * 1000).toLocaleDateString("en-US", { timeZone: "UTC" }),
         <Timer end={new Date(option.expiry * 1000)} format='dhm' />,
         <><Button onClick={() => goToToken(option.addr)}> View Vaults </Button><GoToUniswapButton token={option.addr} /></>,
       ]}

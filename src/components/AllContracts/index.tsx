@@ -9,6 +9,7 @@ import { getPreference, storePreference } from '../../utils/storage';
 import { useOptions } from '../../hooks'
 import { EthOptionList } from './EthOptionList'
 import { InsuranceList } from './InsuranceList'
+import { OtherOptionList } from './OtherOptionList'
 import tracker from '../../utils/tracker';
 
 function AllContracts() {
@@ -20,7 +21,7 @@ function AllContracts() {
     insurances,
     ethCalls,
     ethPuts,
-    compPuts
+    otherPuts
   } = useOptions()
 
   const storedOptionTab = getPreference('optionTab', '0');
@@ -71,16 +72,14 @@ function AllContracts() {
       {tabSelected === 1 &&
         <EthOptionList
           isInitializing={isInitializing}
-          typeText="ETH Options"
           entries={ethCalls.concat(ethPuts)}
           showExpired={showExpired}
           goToToken={goToToken}
         />}
       {tabSelected === 2 &&
-        <EthOptionList
+        <OtherOptionList
           isInitializing={isInitializing}
-          typeText="Other Options"
-          entries={compPuts}
+          entries={otherPuts}
           showExpired={showExpired}
           goToToken={goToToken}
         />

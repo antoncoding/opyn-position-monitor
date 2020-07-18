@@ -8,13 +8,14 @@ import { GoToUniswapButton } from '../common';
 
 import * as types from '../../types'
 
-export function EthOptionList({ isInitializing, entries, showExpired, goToToken }: { isInitializing:Boolean, entries: types.ETHOption[], showExpired: boolean, goToToken: Function }) {
+
+export function OtherOptionList({ isInitializing, entries, showExpired, goToToken }: { isInitializing:Boolean, entries: types.ETHOption[], showExpired: boolean, goToToken: Function }) {
   const [page, setPage] = useState(0)
   return (
     <DataView
       status={isInitializing?'loading':'default'}
-      statusEmpty={<div>No ETH Options Available</div>}
-      fields={['Contract', 'Strike Price', 'Expiration', 'Expires in', '']}
+      statusEmpty={<div>No Options Available</div>}
+      fields={['Contract','Underlying', 'Strike Price', 'Expiration', 'Expires in', '']}
       entries={entries
         .filter((option) => showExpired || option.expiry * 1000 > Date.now())
         .sort((oa, ob) =>  oa.type === ob.type 

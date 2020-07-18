@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  Header, DataView, IdentityBadge, Button, Tabs, Timer
+  Header, Tabs
 } from '@aragon/ui';
 
-import { Comment, CheckBox, GoToBalancerButton, GoToUniswapButton, TokenIcon, ProtocolIcon } from '../common';
+import { Comment, CheckBox } from '../common';
 import { getPreference, storePreference } from '../../utils/storage';
 import { useOptions } from '../../hooks'
 import { EthOptionList } from './EthOptionList'
 import { InsuranceList } from './InsuranceList'
-import * as types from '../../types'
 import tracker from '../../utils/tracker';
 
 function AllContracts() {

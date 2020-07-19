@@ -7,7 +7,7 @@ import Onboard from 'bnc-onboard';
 
 import { notify } from './blockNative.ts';
 import { getAllowance, getPremiumToPay } from './infura';
-import { getPreference } from './storage.ts';
+import { getPreference, storePreference } from './storage.ts';
 import {
   ETH_ADDRESS,
   Kollateral_Liquidator,
@@ -39,14 +39,17 @@ let web3;
 
 let onboard;
 
-export const initOnboard = (onchange) => {
+export const initOnboard = async (setAddressCallback) => {
+  const previouslySelectedWallet = getPreference('selectedWallet', null);
+
   onboard = Onboard({
     darkMode: getPreference('theme', 'light') === 'dark',
     dappId: BLOCKNATIVE_KEY, // [String] The API key created by step one above
     networkId: 1, // [Integer] The Ethereum network ID your Dapp uses.
     subscriptions: {
-      address: onchange,
+      address: setAddressCallback,
       wallet: (wallet) => {
+        storePreference('selectedWallet', wallet.name);
         web3 = new Web3(wallet.provider);
       },
     },
@@ -68,6 +71,15 @@ export const initOnboard = (onchange) => {
       ],
     },
   });
+
+  // call wallet select with that value if it exists
+  if (previouslySelectedWallet != null) {
+    const selected = await onboard.walletSelect(previouslySelectedWallet);
+    if (selected) {
+      const address = onboard.getState().address;
+      setAddressCallback(address);
+    }
+  }
 };
 
 export const updateModalMode = async (theme) => {
@@ -89,11 +101,11 @@ export const disconnect = async () => {
 
 // eslint-disable-next-line consistent-return
 export const checkConnectedAndGetAddress = async () => {
-  await onboard.walletSelect();
   let checked = false;
   try {
     checked = await onboard.walletCheck();
   } catch (error) {
+    await onboard.walletSelect();
     checked = await onboard.walletCheck();
   } finally {
     // eslint-disable-next-line no-unsafe-finally

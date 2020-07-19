@@ -1,22 +1,19 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { initOnboard } from '../utils/web3'
 
 export const useConnectedUser = () => {
-  const [user, updateUser] = useState<string>('')
+  const [user, setUser] = useState<string>('')
   useEffect(() => {
     initOnboard((address: string | undefined)=>{
       if(!address) {
-        updateUser('')
+        setUser('')
       } else {
-        updateUser(address)
+        setUser(address)
       }
     })
   }, 
-  [updateUser]);
-  const setUser = useCallback((user: string): void => {
-    updateUser(user)
-  }, [])
- 
+  []);
+  
   return { user, setUser }
 
 }

@@ -1,9 +1,12 @@
-import { useState, useCallback } from 'react'
-// import { isCompositeComponent } from 'react-dom/test-utils'
+import { useState, useEffect, useCallback } from 'react'
+import { initOnboard } from '../utils/web3'
 
 export const useConnectedUser = () => {
   const [user, updateUser] = useState<string>('')
-
+  useEffect(() => {
+    initOnboard(updateUser)
+  }, 
+  [updateUser]);
   const setUser = useCallback((user: string): void => {
     updateUser(user)
   }, [])

@@ -317,6 +317,7 @@ function BuyAndSell({
     }
     const signedOrder = await signOrder(order);
     try {
+      console.log(`fix this!?`)
       await broadcastOrders([signedOrder]);
     } catch (error) {
       toast(error);

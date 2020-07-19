@@ -37,38 +37,51 @@ const FORTMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY;
 
 let web3;
 
-const onboard = Onboard({
-  darkMode: getPreference('theme', 'light') === 'dark',
-  dappId: BLOCKNATIVE_KEY, // [String] The API key created by step one above
-  networkId: 1, // [Integer] The Ethereum network ID your Dapp uses.
-  subscriptions: {
-    wallet: (wallet) => {
-      web3 = new Web3(wallet.provider);
+let onboard;
+
+export const initOnboard = (onchange) => {
+  onboard = Onboard({
+    darkMode: getPreference('theme', 'light') === 'dark',
+    dappId: BLOCKNATIVE_KEY, // [String] The API key created by step one above
+    networkId: 1, // [Integer] The Ethereum network ID your Dapp uses.
+    subscriptions: {
+      address: onchange,
+      wallet: (wallet) => {
+        web3 = new Web3(wallet.provider);
+      },
     },
-  },
-  walletSelect: {
-    description: 'Please select a wallet to connect to Opyn Monitor',
-    wallets: [
-      { walletName: 'metamask' },
-      {
-        walletName: 'walletConnect',
-        infuraKey: INFURA_KEY,
-      },
-      {
-        walletName: 'fortmatic',
-        apiKey: FORTMATIC_KEY,
-      },
-      { walletName: 'trust' },
-      { walletName: 'coinbase' },
-      { walletName: 'status' },
-    ],
-  },
-});
+    walletSelect: {
+      description: 'Please select a wallet to connect to Opyn Monitor',
+      wallets: [
+        { walletName: 'metamask' },
+        {
+          walletName: 'walletConnect',
+          infuraKey: INFURA_KEY,
+        },
+        {
+          walletName: 'fortmatic',
+          apiKey: FORTMATIC_KEY,
+        },
+        { walletName: 'trust' },
+        { walletName: 'coinbase' },
+        { walletName: 'status' },
+      ],
+    },
+  });
+};
 
 export const updateModalMode = async (theme) => {
   const darkMode = theme === 'dark';
   onboard.config({ darkMode });
 };
+
+// export const setOnchengAddress = async (onchange) => {
+//   onboard.config({
+//     subscriptions: {
+//       address: onchange,
+//     },
+//   });
+// };
 
 export const connect = async () => {
   const selected = await onboard.walletSelect();
@@ -84,11 +97,11 @@ export const disconnect = async () => {
 
 // eslint-disable-next-line consistent-return
 export const checkConnectedAndGetAddress = async () => {
+  await onboard.walletSelect();
   let checked = false;
   try {
     checked = await onboard.walletCheck();
   } catch (error) {
-    await onboard.walletSelect();
     checked = await onboard.walletCheck();
   } finally {
     // eslint-disable-next-line no-unsafe-finally

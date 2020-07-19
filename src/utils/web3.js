@@ -75,14 +75,6 @@ export const updateModalMode = async (theme) => {
   onboard.config({ darkMode });
 };
 
-// export const setOnchengAddress = async (onchange) => {
-//   onboard.config({
-//     subscriptions: {
-//       address: onchange,
-//     },
-//   });
-// };
-
 export const connect = async () => {
   const selected = await onboard.walletSelect();
   if (!selected) return false;

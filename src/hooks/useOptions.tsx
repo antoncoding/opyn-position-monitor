@@ -122,9 +122,9 @@ const initOptions = async (): Promise<{
       } else {
         // Query Infura
         const uniswapExchange = await getUniswapExchangeAddress(option.addr);
-
+        // if (option.addr === "0x7aa5e66a3cd1054c3a465ef25b33c9ba47cb8c99") console.log (option)
         // no exchange: ignore.
-        if (uniswapExchange === EMPTY_EXCHANGE) {
+        if (uniswapExchange === EMPTY_EXCHANGE && option.addr !== "0x7aa5e66a3cd1054c3a465ef25b33c9ba47cb8c99") {
           return;
         }
 
@@ -225,7 +225,7 @@ const categorizeOptions = (
 const parseStrikePriceUSDCFromName = (option: types.optionWithStat, type: 'call'|'put') => {
   let strikePriceInUSD = 0;
   try {
-    strikePriceInUSD = parseInt(option.name.split('$')[1].split(' ')[0], 10);
+    strikePriceInUSD = parseFloat(option.name.split('$')[1].split(' ')[0]);
   } catch {
     if(type === 'call') {
       strikePriceInUSD = new BigNumber(10)

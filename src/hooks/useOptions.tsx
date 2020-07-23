@@ -122,9 +122,8 @@ const initOptions = async (): Promise<{
       } else {
         // Query Infura
         const uniswapExchange = await getUniswapExchangeAddress(option.addr);
-        // if (option.addr === "0x7aa5e66a3cd1054c3a465ef25b33c9ba47cb8c99") console.log (option)
         // no exchange: ignore.
-        if (uniswapExchange === EMPTY_EXCHANGE && option.addr !== "0x7aa5e66a3cd1054c3a465ef25b33c9ba47cb8c99") {
+        if (uniswapExchange === EMPTY_EXCHANGE) {
           return;
         }
 

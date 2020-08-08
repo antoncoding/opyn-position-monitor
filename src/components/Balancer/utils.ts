@@ -26,7 +26,6 @@ export function getApprxATMPrice(ethPrice: BigNumber, volatility: number, now: D
 
 export function getApprxATMPrice2(strikePrice: BigNumber, ethPrice: BigNumber, volatility: number, now: Date, expiry: Date) {
   const t = new BigNumber(expiry.getTime() - now.getTime()).div(1000)
-  console.log(`t in s ${t.toNumber()}`)
   // const timeInYear = new BigNumber(expiry.getTime() - now.getTime()).div(1000).div(86400).div(365);
   const d = (ethPrice.minus(strikePrice)).div(2)
   const avg = (ethPrice.plus(strikePrice)).div(2)

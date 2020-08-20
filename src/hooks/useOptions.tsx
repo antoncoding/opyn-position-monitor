@@ -186,7 +186,6 @@ const categorizeOptions = (
   options.forEach((option) => {
     if (option.name === '') return;
     if (option.collateral === USDC && option.strike === USDC && option.underlying === WETH) {
-      // put options, underlying == weth
       const strikePriceInUSD = parseStrikePriceUSDCFromName(option, 'put')
       const put = {
         ...option,
@@ -195,7 +194,6 @@ const categorizeOptions = (
       };
       ethPuts.push(put);
     } else if (
-      // call options with ETH collateral
       option.collateral === OPYN_ETH &&
       option.strike === OPYN_ETH &&
       option.underlying === USDC

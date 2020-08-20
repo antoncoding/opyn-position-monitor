@@ -27,7 +27,7 @@ type openVaultModalProps = {
 
 function OpenVaultModal({ user, option }: openVaultModalProps) {
   const toast = useToast();
-  const history = useHistory();
+  const historyy = useHistory();
 
   const [opened, setOpened] = useState(false);
 
@@ -113,7 +113,7 @@ function OpenVaultModal({ user, option }: openVaultModalProps) {
       toBaseUnitBN(collateralAmt, option.collateral.decimals).toString(),
       toBaseUnitBN(mintTokenAmt, option.decimals).toString(),
     );
-    history.push(`/manage/${option.addr}/${user}`);
+    historyy.push(`/manage/${option.addr}/${user}`);
   };
 
   const open = useCallback(() => setOpened(true), []);
@@ -129,8 +129,6 @@ function OpenVaultModal({ user, option }: openVaultModalProps) {
       <Modal width={800} padding={50} visible={opened} onClose={close}>
         <Header primary="Open Vault" />
         <Comment text="Select how you want to open a vault." />
-        {/* <div style={{ display: 'flex' }}> */}
-        {/* <div style={{ width: '30%' }}> */}
         <Card height="300" width="729">
           <SectionTitle title="Open Empty Vault" />
           <Comment text="You can add collateral and mint tokens later." />

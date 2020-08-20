@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import * as types from '../types';
 import { getAllOptions, getUniswapExchanges, optionTheGraph } from '../utils/graph';
 import { getUniswapExchangeAddress, getERC20Symbol, getERC20Name } from '../utils/infura';
-import { knownTokens, COMP, BAL, USDC, OPYN_ETH, WETH } from '../constants/tokens';
+import { knownTokens, COMP, BAL, USDC, OPYN_ETH, WETH, YFI } from '../constants/tokens';
 import { blackList } from '../constants/options'
 import { EMPTY_EXCHANGE } from '../constants/contracts';
 
@@ -18,7 +18,7 @@ import Promise from 'bluebird';
 const ERC20InfoAndExchangeKey = 'ERC20InfoAndExchanges';
 
 // Only accept comp or bal options to show in "Other options"
-export const isOtherOptions = (token) => token === COMP || token === BAL;
+export const isOtherOptions = (token) => token === COMP || token === BAL || token === YFI;
 
 type storedERC20Info = {
   address: string;
@@ -186,6 +186,7 @@ const categorizeOptions = (
   options.forEach((option) => {
     if (option.name === '') return;
     if (option.collateral === USDC && option.strike === USDC && option.underlying === WETH) {
+      // put options, underlying == weth
       const strikePriceInUSD = parseStrikePriceUSDCFromName(option, 'put')
       const put = {
         ...option,
@@ -194,6 +195,7 @@ const categorizeOptions = (
       };
       ethPuts.push(put);
     } else if (
+      // call options with ETH collateral
       option.collateral === OPYN_ETH &&
       option.strike === OPYN_ETH &&
       option.underlying === USDC

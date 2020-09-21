@@ -54,6 +54,8 @@ function MyVaults() {
   const [showExpired, setShowExpired] = useState(getPreference('showExpired', '0') === '1');
   const [showEmpty, setShowEmpty] = useState(getPreference('showEmpty', '1') === '1');
 
+  console.log(`showEmpty`, showEmpty)
+
   const displayVaults = opendVaults
     .filter((vault) => showExpired || vault.expiry * 1000 > Date.now())
     .filter((vault) => showEmpty || new BigNumber(vault.collateral).gt(new BigNumber(0)));

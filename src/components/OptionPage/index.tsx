@@ -41,6 +41,7 @@ function OptionPage() {
     const allVaults = await getAllVaultsForOption(token);
     setVaults(allVaults);
     setIsLoadingVaults(false)
+    console.log(`done`)
   }, [token]);
 
   return (

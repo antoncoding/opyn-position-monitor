@@ -18,7 +18,7 @@ import Promise from 'bluebird';
 const ERC20InfoAndExchangeKey = 'ERC20InfoAndExchanges';
 
 // Only accept comp or bal options to show in "Other options"
-export const isOtherOptions = (token) => 
+export const isValidAsset = (token) => 
   token === COMP || 
   token === BAL || 
   token === YFI || 
@@ -215,7 +215,7 @@ const categorizeOptions = (
         strikePriceInUSD,
       };
       ethCalls.push(call);
-    }  else if (option.collateral === USDC && option.strike === USDC && isOtherOptions(option.underlying)) {
+    }  else if (option.collateral === USDC && option.strike === USDC && isValidAsset(option.underlying)) {
       const strikePriceInUSD = parseStrikePriceUSDCFromName(option, 'put')
       const put = {
         ...option,
@@ -223,7 +223,7 @@ const categorizeOptions = (
         strikePriceInUSD,
       };
       otherPuts.push(put);
-    } else if (isOtherOptions(option.collateral) && isOtherOptions(option.strike) && option.underlying === USDC) {
+    } else if (isValidAsset(option.collateral) && isValidAsset(option.strike) && option.underlying === USDC) {
       const strikePriceInUSD = parseStrikePriceUSDCFromName(option, 'call')
       const call = {
         ...option,

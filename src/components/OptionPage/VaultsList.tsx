@@ -26,7 +26,7 @@ function VaultOwnerList({
 }: VaultOwnerListProps) {
 
   const { user } = useContext(userContext)
-  console.log(`isInitializing`, isInitializing) 
+
   const vaultUsesCollateral = option.collateral.addr !== option.strike.addr;
 
   const [isLoading, setIsLoading] = useState(true);

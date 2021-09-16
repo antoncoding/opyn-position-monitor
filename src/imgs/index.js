@@ -14,6 +14,7 @@ import UNI from './uni.png';
 import SNX from './SNX.png';
 import WBTC from './wbtc.png';
 import DPI from './dpi.png';
+import DYDX from './dydx.webp';
 // Aave tokens
 import aUSDC from './aUSDC.svg';
 // Compound tokens
@@ -32,6 +33,7 @@ export {
   CRV,
   UNI,
   DPI,
+  DYDX,
   SNX,
   WBTC,
   USDC,

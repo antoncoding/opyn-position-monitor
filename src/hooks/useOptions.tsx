@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import * as types from '../types';
 import { getAllOptions, getUniswapExchanges, optionTheGraph } from '../utils/graph';
 import { getUniswapExchangeAddress, getERC20Symbol, getERC20Name } from '../utils/infura';
-import { knownTokens, COMP, BAL, USDC, OPYN_ETH, WETH, YFI, CRV, UNI, SNX, WBTC, DPI } from '../constants/tokens';
+import { knownTokens, DYDX, COMP, BAL, USDC, OPYN_ETH, WETH, YFI, CRV, UNI, SNX, WBTC, DPI } from '../constants/tokens';
 import { blackList } from '../constants/options'
 import { EMPTY_EXCHANGE } from '../constants/contracts';
 
@@ -26,6 +26,7 @@ export const isValidAsset = (token) =>
   token === UNI ||
   token === WBTC ||
   token === SNX || 
+  token === DYDX ||
   token === DPI;
 
 type storedERC20Info = {

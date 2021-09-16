@@ -118,6 +118,13 @@ export const DPI = {
   img: imgs.DPI,
 };
 
+export const DYDX = {
+  addr: '0x92d6c1e31e14520e676a687f0a93788b716beff5',
+  decimals: 18,
+  symbol: 'dYdX',
+  img: imgs.DYDX,
+};
+
 export const knownTokens = [
-  USDC, OPYN_ETH, cDAI, cUSDC, CurveFi, WETH, DAI, yDAI, aUSDC, COMP, BAL, YFI, CRV, UNI, SNX, WBTC, DPI,
+  USDC, OPYN_ETH, cDAI, cUSDC, CurveFi, WETH, DAI, yDAI, aUSDC, COMP, DYDX, BAL, YFI, CRV, UNI, SNX, WBTC, DPI,
 ];

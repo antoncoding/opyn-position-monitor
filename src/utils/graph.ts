@@ -14,7 +14,7 @@ export async function getAllVaultsForOption(
 > {
   const query = `
   {
-    vaults(where: {
+    vaults(first: 1000,where: {
       optionsContract: "${optionAddress}"
     }) {
       owner
@@ -43,7 +43,7 @@ export async function getAllVaultsForUser(
   }[]
 > {
   const query = `{
-    vaults (where: {owner: "${owner}"}) {
+    vaults (first: 1000, where: {owner: "${owner}"}) {
       optionsContract {
         address
       }
@@ -230,7 +230,7 @@ export const getUserOptionBalances = async (
   address: string
 ): Promise<{ oToken: string; balance: string }[]> => {
   const query = `{
-    accountBalances (where: {
+    accountBalances (first: 1000, where: {
       account: "${address}"
     }) {
       token {

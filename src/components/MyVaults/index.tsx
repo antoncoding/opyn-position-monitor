@@ -51,7 +51,7 @@ function MyVaults() {
   const hasAddressConnected = user !== '' || watchAddress !== '';
 
   // checkbox
-  const [showExpired, setShowExpired] = useState(getPreference('showExpired', '0') === '1');
+  const [showExpired, setShowExpired] = useState(getPreference('showExpired', '0') === '0');
   const [showEmpty, setShowEmpty] = useState(getPreference('showEmpty', '1') === '1');
 
   const displayVaults = opendVaults
@@ -105,13 +105,7 @@ function MyVaults() {
   return (
     <>
       <Header primary="My Vaults" />
-      {hasAddressConnected ? ( 
-        <>
-         { (displayVaults.length > 0 || (isInitializing || isLoading)) && 
-          <div style={{ paddingBottom: '3%' }}>
-            <div style={{ display: 'flex' }}>
-              <SectionTitle title="Existing Vaults" />
-              <div style={{ marginLeft: 'auto' }}>
+      <div style={{ marginLeft: 'auto' }}>
                 <div style={{ display: 'flex' }}>
                   <CheckBox
                     text="Expired"
@@ -131,6 +125,12 @@ function MyVaults() {
                   />
                 </div>
               </div>
+      {hasAddressConnected ? ( 
+        <>
+         { (displayVaults.length > 0 || (isInitializing || isLoading)) && 
+          <div style={{ paddingBottom: '3%' }}>
+            <div style={{ display: 'flex' }}>
+              <SectionTitle title="Existing Vaults" />
             </div>
 
             <DataView
